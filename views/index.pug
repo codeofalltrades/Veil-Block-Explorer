@@ -1,0 +1,215 @@
+extends layout
+
+block headContent
+	title Home
+	
+block content
+	h1.h3 #{coinConfig.siteTitle}
+	hr
+
+	if (getblockchaininfo == null)
+		div(class="alert alert-warning")
+			p(class="font-weight-bold") Unable to get basic blockchain data
+			ul
+				li If you just started your node, it may still be initializing.
+				li If your node is already initialized, check your RPC connection info.
+	else
+		- let difficultyData = getblockchaininfo.difficulty_pos;
+		- let dx16rtDiff = getblockchaininfo.difficulty_pow;
+		- let dProgPowDiff = getblockchaininfo.difficulty_progpow;
+		- let dRandomxDiff = getblockchaininfo.difficulty_randomx;
+		- let dSha256dDiff = getblockchaininfo.difficulty_sha256d;
+		- let sizeData = utils.formatLargeNumber(getblockchaininfo.size_on_disk, 2);
+		- let dMoneySupply = getblockchaininfo.moneysupply_formatted;
+		- let dZerocoinSupplyTotal = getblockchaininfo.zerocoinsupply[4].amount;
+		- let dZerocoinSupplyTotalFormatted = (dZerocoinSupplyTotal == null) ? 0 : (dZerocoinSupplyTotal / 100000000).toFixed(2);
+		- let dZerocoinSupplyTotalPercentFormatted = parseFloat(getblockchaininfo.zerocoinsupply[4].percent).toFixed(2);
+		- let d10Supply = getblockchaininfo.zerocoinsupply[0].amount_formatted;
+		- let d100Supply = getblockchaininfo.zerocoinsupply[1].amount_formatted;
+		- let d1000Supply = getblockchaininfo.zerocoinsupply[2].amount_formatted;
+		- let d10000Supply = getblockchaininfo.zerocoinsupply[3].amount_formatted;
+		- let d10SupplyPercent = parseFloat(getblockchaininfo.zerocoinsupply[0].percent).toFixed(2);
+		- let d100SupplyPercent = parseFloat(getblockchaininfo.zerocoinsupply[1].percent).toFixed(2);
+		- let d1000SupplyPercent = parseFloat(getblockchaininfo.zerocoinsupply[2].percent).toFixed(2);
+		- let d10000SupplyPercent = parseFloat(getblockchaininfo.zerocoinsupply[3].percent).toFixed(2);
+
+		div(class="card mb-4 shadow-sm")
+			div(class="card-header")
+				h2(class="h6 mb-0") Network Summary
+			div(class="card-body")
+				div(class="row index-summary")
+					div(class="col-md-4")
+						h5.h5 Blockchain
+						table(class="table table-borderless table-sm table-hover mb-lg-0")
+							tbody
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-cubes mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| Last Indexed Block
+									td.text-right.text-monospace
+										span.d-xxl-none #{getblockchaininfo.blocks.toLocaleString()}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-hashtag mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| Best Block Hash
+									td(class="text-right text-monospace text-overflow-ellipsis" data-toggle="tooltip", title=getblockchaininfo.bestblockhash)
+										span.d-xxl-none #{getblockchaininfo.bestblockhash.substring(0, 25) + '...'}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-clock mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| Last Block Update
+									td.text-right.text-monospace
+										span.d-xxl-none #{new Date(getblockchaininfo.mediantime * 1000).toUTCString()}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-database mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| Data Size
+									td.text-right.text-monospace
+										span.d-xxl-none #{sizeData[0]} #{sizeData[1].abbreviation}B
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fab fa-superpowers mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| Next Superblock
+									td.text-right.text-monospace
+										span.d-xxl-none #{nextSuperBlock.toLocaleString()}
+
+					div(class="col-md-3")
+						h5.h5 Difficulty
+						table(class="table table-borderless table-sm table-hover mb-lg-0")
+							tbody
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-bezier-curve mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| PoS
+									td.text-right.text-monospace
+										span.d-xxl-none #{difficultyData}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-tachometer-alt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| ProgPow
+									td.text-right.text-monospace
+										span.d-xxl-none #{dProgPowDiff}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-bolt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| RandomX
+									td.text-right.text-monospace
+										span.d-xxl-none #{dRandomxDiff}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-hdd mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| SHA256D
+									td.text-right.text-monospace
+										span.d-xxl-none #{dSha256dDiff}
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-tachometer-alt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| x16rt
+									td.text-right.text-monospace
+										span.d-xxl-none #{dx16rtDiff}
+
+					div(class="col-md-2")
+						h5.h5 Block Split (24hr)
+						table(class="table table-borderless table-sm table-hover mb-lg-0")
+							tbody
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-bezier-curve mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| PoS
+									td.text-right.text-monospace
+										span.d-xxl-none #{blockCounts.pos} (#{blockCounts.posPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-tachometer-alt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| ProgPow
+									td.text-right.text-monospace
+										span.d-xxl-none #{blockCounts.progpow} (#{blockCounts.progPowPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-bolt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| RandomX
+									td.text-right.text-monospace
+										span.d-xxl-none #{blockCounts.randomx} (#{blockCounts.randomxPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-hdd mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| SHA256D
+									td.text-right.text-monospace
+										span.d-xxl-none #{blockCounts.sha256d} (#{blockCounts.sha256dPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
+										i(class="fas fa-tachometer-alt mr-1 summary-icon")
+									th.px-2.px-lg-0.px-xl-2
+										| x16rt
+									td.text-right.text-monospace
+										span.d-xxl-none #{blockCounts.x16rt} (#{blockCounts.x16rtPercent}%)
+
+
+					div(class="col-md-3")
+						h5.h5 Supply
+						table(class="table table-borderless table-sm table-hover mb-lg-0")
+							tbody
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| Total Supply
+									td.text-right.text-monospace
+										span.d-xxl-none #{dMoneySupply}
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| Zerocoin Supply Total
+									td.text-right.text-monospace
+										span.d-xxl-none #{dZerocoinSupplyTotalFormatted} (#{dZerocoinSupplyTotalPercentFormatted}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| 10-denom
+									td.text-right.text-monospace
+										span.d-xxl-none #{d10Supply} (#{d10SupplyPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| 100-denom
+									td.text-right.text-monospace
+										span.d-xxl-none #{d100Supply} (#{d100SupplyPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| 1000-denom
+									td.text-right.text-monospace
+										span.d-xxl-none #{d1000Supply} (#{d1000SupplyPercent}%)
+								tr
+									th.px-2.px-lg-0.px-xl-2
+										| 10000-denom
+									td.text-right.text-monospace
+										span.d-xxl-none #{d10000Supply} (#{d10000SupplyPercent}%)
+
+		include includes/tools-card.pug
+
+		div(class="card mb-4 shadow-sm mb-4-no-bottom")
+			div(class="card-header")
+				div(class="row")
+					div(class="col")
+						h2(class="h6 mb-0") Latest Blocks
+							if (getblockchaininfo.initialblockdownload)
+								small  (#{(getblockchaininfo.headers - getblockchaininfo.blocks).toLocaleString()} behind)
+
+					div(class="col")
+						span(style="float: right;")
+							a(href="/blocks")
+								span  Browse Blocks &raquo;
+			div(class="card-body")
+				- let blocks = getblockchaininfo.latestBlocks;
+				- let blockOffset = 0;
+
+				include includes/blocks-list.pug
