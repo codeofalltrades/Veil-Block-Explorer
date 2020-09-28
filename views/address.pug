@@ -104,7 +104,7 @@ block content
 							div(class="row")
 								div(class="col-md-6")
 
-									if (addressObj.hash)
+									if (addressObj.hash != undefined && addressObj.hash)
 										div(class="row")
 											div(class="summary-split-table-label") Hash 160
 											div(class="summary-split-table-content monospace") #{addressObj.hash.toString("hex")}
@@ -236,7 +236,7 @@ block content
 														else
 															i(class="fas fa-times text-warning")
 
-					div(class="card mb-3 shadow-sm")
+					div(class="card mb-3 shadow-sm" style="display:none")
 						div(class="card-header clearfix")
 							div(class="float-left")
 								span(class="h6")
@@ -306,9 +306,7 @@ block content
 											span  for more information.
 
 										else if (err == "No address API configured")
-											span No address API is configured. See 
-											a(href="https://github.com/Veil-Project/veil-block-explorer/blob/master/.env-sample") the example configuration file
-											span  for help setting up an address API if desired.
+											span &nbsp;
 
 								else if (transactions.length == 0)
 									span No transactions found
