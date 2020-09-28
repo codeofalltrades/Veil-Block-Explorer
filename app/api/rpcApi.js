@@ -178,27 +178,13 @@ function getRawTransaction(txid) {
 
 		} else {
 			getRpcDataWithParams({method:"getrawtransaction", parameters:[txid, 1]}).then(function(result) {
-				if (result === null) {
+				if (result === null || result === undefined) {
 					reject(result);
-
 					return;
 				}
 
-				getRpcDataWithParams({method:"decoderawtransaction", parameters:[result, 1]}).then(function(resultInner) {
-					if (resultInner === null) {
-						reject(resultInner);
-
-						return;
-					}
-
-					resolve(resultInner);
-
-				}).catch(function(err1) {
-					reject(err1);
-				});
-
 				resolve(result);
-
+				return;
 			}).catch(function(err) {
 				reject(err);
 			});
