@@ -1186,13 +1186,19 @@ router.get("/fun", function (req, res, next) {
     next();
 });
 
-router.get("/api/:rpcCmd/", function (req, res, next) {
-    coreApi.getPeerSummary().then(function (peerSummary) {
-        res.json("peers");
-        next();
-    }).catch(function (err) {
-        res.json("error");
-        next();
+router.get("/api/getblockchaininfo", function (req, res, next) {
+    coreApi.getBlockchainInfo().then(function(blockchainInfoResult) {
+        res.json(blockchainInfoResult);
+    }).catch(function(err) {
+        reject(err);
+    });
+});
+
+router.get("/api/getchainalgostats", function (req, res, next) {
+    coreApi.getChainAlgoStats().then(function(chainAlgoStats) {
+        res.json(chainAlgoStats);
+    }).catch(function(err) {
+        reject(err);
     });
 });
 

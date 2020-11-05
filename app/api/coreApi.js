@@ -137,11 +137,11 @@ function shouldCacheTransaction(tx) {
 }
 
 function getBlockchainInfo() {
-	return tryCacheThenRpcApi(miscCache, "getBlockchainInfo", 10000, rpcApi.getBlockchainInfo);
+	return tryCacheThenRpcApi(miscCache, "getBlockchainInfo", 1000, rpcApi.getBlockchainInfo);
 }
 
 function getChainAlgoStats() {
-	return tryCacheThenRpcApi(miscCache, "getChainAlgoStats", 10000, rpcApi.getChainAlgoStats);
+	return tryCacheThenRpcApi(miscCache, "getChainAlgoStats", 1000, rpcApi.getChainAlgoStats);
 }
 
 function getNetworkInfo() {
