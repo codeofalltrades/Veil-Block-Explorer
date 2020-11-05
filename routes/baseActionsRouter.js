@@ -52,9 +52,7 @@ router.get("/", function (req, res, next) {
         res.locals.blockCounts.randomxPercent = ((parseInt(res.locals.blockCounts.randomx) / 1440) * 100).toFixed(2);
         res.locals.blockCounts.sha256d = algoInfo.sha256d;
         res.locals.blockCounts.sha256dPercent = ((parseInt(res.locals.blockCounts.sha256d) / 1440) * 100).toFixed(2);
-        res.locals.blockCounts.x16rt = algoInfo.x16rt;
-        res.locals.blockCounts.x16rtPercent = ((parseInt(res.locals.blockCounts.x16rt) / 1440) * 100).toFixed(2);
-        res.locals.blockCounts.total = parseInt(algoInfo.pos) + parseInt(algoInfo.progpow) + parseInt(algoInfo.randomx) + parseInt(algoInfo.sha256d) + parseInt(algoInfo.x16rt);
+        res.locals.blockCounts.total = parseInt(algoInfo.pos) + parseInt(algoInfo.progpow) + parseInt(algoInfo.randomx) + parseInt(algoInfo.sha256d);
     });
 
     var promises = [];
@@ -1200,6 +1198,27 @@ router.get("/api/getchainalgostats", function (req, res, next) {
     }).catch(function(err) {
         reject(err);
     });
+});
+
+router.get("/api2/:rpccmd/:param1", function (req, res, next) {
+    console.log(req.params);
+    let rpcCmd = req.params.rpccmd;
+    let param1 = req.params.param1;
+    if(rpcCmd.toLowerCase() === 'getchainalgostats'){
+        coreApi.getChainAlgoStats().then(function(chainAlgoStats) {
+            res.json(chainAlgoStats);
+        }).catch(function(err) {
+            reject(err);
+        });
+    }
+    if(rpcCmd.toLowerCase() === 'getblockhash'){
+        coreApi.getBlockHash(parseInt(param1)).then(function(blockHash) {
+            res.json(blockHash);
+        }).catch(function(err) {
+            reject(err);
+        });
+    }
+
 });
 
 module.exports = router;
