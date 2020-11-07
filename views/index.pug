@@ -15,7 +15,6 @@ block content
 				li If your node is already initialized, check your RPC connection info.
 	else
 		- let difficultyData = getblockchaininfo.difficulty_pos;
-		- let dx16rtDiff = getblockchaininfo.difficulty_pow;
 		- let dProgPowDiff = getblockchaininfo.difficulty_progpow;
 		- let dRandomxDiff = getblockchaininfo.difficulty_randomx;
 		- let dSha256dDiff = getblockchaininfo.difficulty_sha256d;
@@ -110,13 +109,6 @@ block content
 										| SHA256D
 									td.text-right.text-monospace
 										span.d-xxl-none #{dSha256dDiff}
-								tr
-									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
-										i(class="fas fa-tachometer-alt mr-1 summary-icon")
-									th.px-2.px-lg-0.px-xl-2
-										| x16rt
-									td.text-right.text-monospace
-										span.d-xxl-none #{dx16rtDiff}
 
 					div(class="col-md-2")
 						h5.h5 Block Split (24hr)
@@ -150,14 +142,6 @@ block content
 										| SHA256D
 									td.text-right.text-monospace
 										span.d-xxl-none #{blockCounts.sha256d} (#{blockCounts.sha256dPercent}%)
-								tr
-									th.px-2.px-lg-0.px-xl-2.width-40px.text-right
-										i(class="fas fa-tachometer-alt mr-1 summary-icon")
-									th.px-2.px-lg-0.px-xl-2
-										| x16rt
-									td.text-right.text-monospace
-										span.d-xxl-none #{blockCounts.x16rt} (#{blockCounts.x16rtPercent}%)
-
 
 					div(class="col-md-3")
 						h5.h5 Supply
