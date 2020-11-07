@@ -170,9 +170,9 @@ function getChainTxStats(blockCount) {
 	});
 }
 
-function getBlockHash(height) {
-	return tryCacheThenRpcApi(miscCache, "getBlochHash", 30000, function () {
-		return rpcApi.getBlockHash(height);
+function getBlockHeader(hash) {
+	return tryCacheThenRpcApi(miscCache, "getBlockHeader", 30000, function () {
+		return rpcApi.getBlockHeader(hash);
 	});
 }
 
@@ -950,7 +950,7 @@ module.exports = {
 	getMiningInfo: getMiningInfo,
 	getBlockByHeight: getBlockByHeight,
 	getBlocksByHeight: getBlocksByHeight,
-	getBlockHash: getBlockHash,
+	getBlockHeader: getBlockHeader,
 	getBlockByHash: getBlockByHash,
 	getBlocksByHash: getBlocksByHash,
 	getBlockByHashWithTransactions: getBlockByHashWithTransactions,

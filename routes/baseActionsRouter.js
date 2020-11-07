@@ -1200,21 +1200,29 @@ router.get("/api/getchainalgostats", function (req, res, next) {
     });
 });
 
-router.get("/api2/:rpccmd/:param1", function (req, res, next) {
+router.get("/rpcapi/:rpccmd/:param1", function (req, res, next) {
     console.log(req.params);
     let rpcCmd = req.params.rpccmd;
     let param1 = req.params.param1;
-    if(rpcCmd.toLowerCase() === 'getchainalgostats'){
-        coreApi.getChainAlgoStats().then(function(chainAlgoStats) {
+    if (rpcCmd.toLowerCase() === 'getchainalgostats') {
+        coreApi.getChainAlgoStats().then(function (chainAlgoStats) {
             res.json(chainAlgoStats);
-        }).catch(function(err) {
+        }).catch(function (err) {
             reject(err);
         });
     }
-    if(rpcCmd.toLowerCase() === 'getblockhash'){
-        coreApi.getBlockHash(parseInt(param1)).then(function(blockHash) {
+    if (rpcCmd.toLowerCase() === 'getblockhash') {
+        coreApi.getBlockByHash(param1, false).then(function (blockHash) {
             res.json(blockHash);
-        }).catch(function(err) {
+        }).catch(function (err) {
+            reject(err);
+        });
+    }
+
+    if (rpcCmd.toLowerCase() === 'getblockheader') {
+        coreApi.getBlockHeader(param1).then(function (blockHeader) {
+            res.json(blockHeader);
+        }).catch(function (err) {
             reject(err);
         });
     }
