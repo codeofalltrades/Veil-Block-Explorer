@@ -57,6 +57,10 @@ function getChainAlgoStats() {
 	return getRpcData("getchainalgostats");
 }
 
+function getZerocoinSupply() {
+	return getRpcData("getZerocoinSupply");
+}
+
 function getMempoolTxids() {
 	return getRpcDataWithParams({method:"getrawmempool", parameters:[false]});
 }
@@ -352,4 +356,5 @@ module.exports = {
 	getPeerInfo: getPeerInfo,
 	getChainTxStats: getChainTxStats,
 	getChainAlgoStats: getChainAlgoStats,
+	getZerocoinSupply: getZerocoinSupply
 };

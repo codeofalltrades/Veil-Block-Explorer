@@ -1202,4 +1202,34 @@ router.get("/api/getchainalgostats", function (req, res, next) {
     });
 });
 
+router.get("/rpcapi/:rpccmd/:param1", function (req, res, next) {
+    console.log(req.params);
+    let rpcCmd = req.params.rpccmd;
+    let param1 = req.params.param1;
+
+    if (rpcCmd.toLowerCase() === 'getblockchaininfo') {
+        coreApi.getBlockchainInfo().then(function(blockchainInfoResult) {
+            res.json(blockchainInfoResult);
+        }).catch(function(err) {
+            reject(err);
+        });
+    }
+
+    if (rpcCmd.toLowerCase() === 'getblockhash') {
+        coreApi.getBlockByHash(param1, false).then(function (blockHashResult) {
+            res.json(blockHashResult);
+        }).catch(function (err) {
+            reject(err);
+        });
+    }
+
+    if (rpcCmd.toLowerCase() === 'getzerocoinsupply') {
+        coreApi.getZerocoinSupply().then(function (zerocoinSupplyResult) {
+            res.json(zerocoinSupplyResult);
+        }).catch(function (err) {
+            reject(err);
+        });
+    }
+});
+
 module.exports = router;

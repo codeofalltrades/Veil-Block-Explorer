@@ -140,6 +140,10 @@ function getBlockchainInfo() {
 	return tryCacheThenRpcApi(miscCache, "getBlockchainInfo", 1000, rpcApi.getBlockchainInfo);
 }
 
+function getZerocoinSupply() {
+	return tryCacheThenRpcApi(miscCache, "getZerocoinSupply", 1000, rpcApi.getZerocoinSupply);
+}
+
 function getChainAlgoStats() {
 	return tryCacheThenRpcApi(miscCache, "getChainAlgoStats", 1000, rpcApi.getChainAlgoStats);
 }
@@ -962,5 +966,6 @@ module.exports = {
 	getChainTxStats: getChainTxStats,
 	getMempoolDetails: getMempoolDetails,
 	getTxCountStats: getTxCountStats,
-	getChainAlgoStats: getChainAlgoStats
+	getChainAlgoStats: getChainAlgoStats,
+	getZerocoinSupply: getZerocoinSupply
 };
