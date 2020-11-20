@@ -144,6 +144,13 @@ function getChainAlgoStats() {
 	return tryCacheThenRpcApi(miscCache, "getChainAlgoStats", 1000, rpcApi.getChainAlgoStats);
 }
 
+function getScanTxOutset(address) {
+	return tryCacheThenRpcApi(miscCache, "getScanTxOutset-" + address, 1000,
+		function () {
+			return rpcApi.getScanTxOutset(address);
+		});
+}
+
 function getNetworkInfo() {
 	return tryCacheThenRpcApi(miscCache, "getNetworkInfo", 10000, rpcApi.getNetworkInfo);
 }
@@ -962,5 +969,6 @@ module.exports = {
 	getChainTxStats: getChainTxStats,
 	getMempoolDetails: getMempoolDetails,
 	getTxCountStats: getTxCountStats,
-	getChainAlgoStats: getChainAlgoStats
+	getChainAlgoStats: getChainAlgoStats,
+	getScanTxOutset: getScanTxOutset
 };
