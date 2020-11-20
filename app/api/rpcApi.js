@@ -57,6 +57,16 @@ function getChainAlgoStats() {
 	return getRpcData("getchainalgostats");
 }
 
+function getScanTxOutset(address) {
+	let mydescOIdj = {
+		"desc": "addr(" + address + ")",
+		"range": 1000000
+	};
+	let myArray = ["addr(" + address + ")", mydescOIdj];
+
+	return getRpcDataWithParams({method:"scantxoutset", parameters:["start", myArray]});
+}
+
 function getMempoolTxids() {
 	return getRpcDataWithParams({method:"getrawmempool", parameters:[false]});
 }
@@ -352,4 +362,5 @@ module.exports = {
 	getPeerInfo: getPeerInfo,
 	getChainTxStats: getChainTxStats,
 	getChainAlgoStats: getChainAlgoStats,
+	getScanTxOutset: getScanTxOutset,
 };

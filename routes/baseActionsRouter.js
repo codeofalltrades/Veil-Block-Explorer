@@ -621,12 +621,12 @@ router.get("/address/:address", function (req, res, next) {
     res.locals.result = {};
 
     try {
-        res.locals.addressObj = bitcoinjs.address.fromBase58Check(address);
+       res.locals.addressObj = bitcoinjs.address.fromBase58Check(address);
 
     } catch (err) {
-        if (!err.toString().startsWith("Error: Non-base58 character")) {
-            res.locals.pageErrors.push(utils.logError("u3gr02gwef", err));
-        }
+        //if (!err.toString().startsWith("Error: Non-base58 character")) {
+        //    res.locals.pageErrors.push(utils.logError("u3gr02gwef", err));
+        // }
 
         try {
             res.locals.addressObj = bitcoinjs.address.fromBech32(address);
@@ -646,14 +646,20 @@ router.get("/address/:address", function (req, res, next) {
 
     coreApi.getAddress(address).then(function (validateaddressResult) {
         res.locals.result.validateaddress = validateaddressResult;
+        console.log('getAddress ' + validateaddressResult.address);
 
         var promises = [];
         if (!res.locals.crawlerBot) {
+            coreApi.getScanTxOutset(validateaddressResult.address).then(function (outsetResult) {
+                //console.log('total_amount ' + outsetResult.total_amount);
+                res.locals.result.address_amount = outsetResult.total_amount;
+            })
+
             var addrScripthash = hexEnc.stringify(sha256(hexEnc.parse(validateaddressResult.scriptPubKey)));
             addrScripthash = addrScripthash.match(/.{2}/g).reverse().join("");
 
             res.locals.electrumScripthash = addrScripthash;
-
+            console.log('addrScripthash ' + addrScripthash);
             promises.push(new Promise(function (resolve, reject) {
                 addressApi.getAddressDetails(address, validateaddressResult.scriptPubKey, sort, limit, offset).then(function (addressDetailsResult) {
                     var addressDetails = addressDetailsResult.addressDetails;
