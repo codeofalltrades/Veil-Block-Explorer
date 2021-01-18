@@ -1208,4 +1208,12 @@ router.get("/api/getchainalgostats", function (req, res, next) {
     });
 });
 
+router.get("/api/getaddressbalance/:address", function (req, res, next) {
+    coreApi.getScanTxOutset(req.params.address).then(function (outsetResult) {
+        res.json(outsetResult.total_amount);
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
 module.exports = router;

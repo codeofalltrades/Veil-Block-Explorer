@@ -92,15 +92,20 @@ module.exports = {
 		}
 	},
 	blockRewardFunction: function (blockHeight, chain) {
-		var eras = [new Decimal8(50)];
-		for (var i = 1; i < 34; i++) {
-			var previous = eras[i - 1];
-			eras.push(new Decimal8(previous).dividedBy(2));
+		if (blockHeight >= 1 && blockHeight <= 518399) {
+			return new Decimal8(50);
 		}
-
-		var halvingBlockInterval = (chain == "regtest" ? 150 : 518400);
-		var index = Math.floor(blockHeight / halvingBlockInterval);
-
-		return eras[index];
+		else if (blockHeight >= 518400 && blockHeight <= 1036799) {
+			return new Decimal8(40);
+		}
+		else if (blockHeight >= 1036800 && blockHeight <= 1555199) {
+			return new Decimal8(30);
+		}
+		else if (blockHeight >= 1555200 && blockHeight <= 2073599) {
+			return new Decimal8(20);
+		}
+		else {
+			return new Decimal8(10);
+		}
 	}
 };
