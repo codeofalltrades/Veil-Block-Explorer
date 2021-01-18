@@ -101,7 +101,7 @@ module.exports = {
 		else if (blockHeight >= 1036800 && blockHeight <= 1555199) {
 			return new Decimal8(30);
 		}
-		else if (blockHeight >= 1036800 && blockHeight <= 1555199) {
+		else if (blockHeight >= 1555200 && blockHeight <= 2073599) {
 			return new Decimal8(20);
 		}
 		else {
