@@ -7,7 +7,6 @@ var router = express.Router();
 var util = require('util');
 var moment = require('moment');
 var veilCore = require("bitcoin-core");
-;
 var qrcode = require('qrcode');
 var bitcoinjs = require('bitcoinjs-lib');
 var sha256 = require("crypto-js/sha256");
@@ -269,16 +268,6 @@ router.get("/disconnect", function (req, res, next) {
     res.redirect("/");
 });
 
-router.get("/changeSetting", function (req, res, next) {
-    if (req.query.name) {
-        req.session[req.query.name] = req.query.value;
-
-        res.cookie('user-setting-' + req.query.name, req.query.value);
-    }
-
-    res.redirect(req.headers.referer);
-});
-
 router.get("/blocks", function (req, res, next) {
     var limit = config.site.browseBlocksPageSize;
     var offset = 0;
@@ -293,7 +282,7 @@ router.get("/blocks", function (req, res, next) {
     }
 
     if (req.query.sort) {
-        sort = req.query.sort;
+        sort = utils.getCleanString(req.query.sort);
     }
 
     res.locals.limit = limit;
@@ -354,8 +343,8 @@ router.post("/search", function (req, res, next) {
         return;
     }
 
-    var query = req.body.query.toLowerCase().trim();
-    var rawCaseQuery = req.body.query.trim();
+    var query = utils.getCleanString(req.body.query).toLowerCase().trim();
+    var rawCaseQuery = utils.getCleanString(req.body.query).trim();
 
     req.session.query = req.body.query;
 
@@ -446,7 +435,7 @@ router.get("/block-height/:blockHeight", function (req, res, next) {
 });
 
 router.get("/block/:blockHash", function (req, res, next) {
-    var blockHash = req.params.blockHash;
+    var blockHash = utils.getCleanString(req.params.blockHash);
 
     res.locals.blockHash = blockHash;
 
@@ -493,7 +482,7 @@ router.get("/block/:blockHash", function (req, res, next) {
 });
 
 router.get("/tx/:transactionId", function (req, res, next) {
-    var txid = req.params.transactionId;
+    var txid = utils.getCleanString(req.params.transactionId);
 
     var output = -1;
     if (req.query.output) {
@@ -587,6 +576,7 @@ router.get("/address/:address", function (req, res, next) {
     var offset = 0;
     var sort = "desc";
 
+    let address = utils.getCleanString(req.params.address);
 
     if (req.query.limit) {
         limit = parseInt(req.query.limit);
@@ -604,11 +594,8 @@ router.get("/address/:address", function (req, res, next) {
     }
 
     if (req.query.sort) {
-        sort = req.query.sort;
+        sort = utils.getCleanString(req.query.sort);
     }
-
-
-    var address = req.params.address;
 
     res.locals.address = address;
     res.locals.limit = limit;
@@ -961,7 +948,7 @@ router.get("/rpc-browser", function (req, res, next) {
         res.locals.gethelp = result;
 
         if (req.query.method) {
-            res.locals.method = req.query.method;
+            res.locals.method = utils.getCleanString(req.query.method);
 
             coreApi.getRpcMethodHelp(req.query.method.trim()).then(function (result2) {
                 res.locals.methodhelp = result2;
@@ -1015,7 +1002,7 @@ router.get("/rpc-browser", function (req, res, next) {
 
                     res.locals.argValues = argValues;
 
-                    if (config.rpcBlacklist.includes(req.query.method.toLowerCase())) {
+                    if (config.rpcBlacklist.includes(utils.getCleanString(req.query.method).toLowerCase())) {
                         res.locals.methodResult = "Sorry, that RPC command is blacklisted. If this is your server, you may allow this command by removing it from the 'rpcBlacklist' setting in config.js.";
 
                         res.render("browser");
@@ -1030,7 +1017,7 @@ router.get("/rpc-browser", function (req, res, next) {
                             return next(err);
                         }
 
-                        debugLog("Executing RPC '" + req.query.method + "' with params: [" + argValues + "]");
+                        debugLog("Executing RPC '" + utils.getCleanString(req.query.method) + "' with params: [" + argValues + "]");
 
                         global.rpcClientNoTimeout.command([{
                             method: req.query.method,
@@ -1070,7 +1057,7 @@ router.get("/rpc-browser", function (req, res, next) {
                     next();
                 }
             }).catch(function (err) {
-                res.locals.userMessage = "Error loading help content for method " + req.query.method + ": " + err;
+                res.locals.userMessage = "Error loading help content for method " + utils.getCleanString(req.query.method) + ": " + err;
 
                 res.render("browser");
 
@@ -1106,7 +1093,7 @@ router.get("/unconfirmed-tx", function (req, res, next) {
     }
 
     if (req.query.sort) {
-        sort = req.query.sort;
+        sort = utils.getCleanString(req.query.sort);
     }
 
     res.locals.limit = limit;
@@ -1134,7 +1121,7 @@ router.get("/tx-stats", function (req, res, next) {
     var dataPoints = 100;
 
     if (req.query.dataPoints) {
-        dataPoints = req.query.dataPoints;
+        dataPoints = utils.getCleanInt(req.query.dataPoints);
     }
 
     if (dataPoints > 250) {
@@ -1209,7 +1196,8 @@ router.get("/api/getchainalgostats", function (req, res, next) {
 });
 
 router.get("/api/getaddressbalance/:address", function (req, res, next) {
-    coreApi.getScanTxOutset(req.params.address).then(function (outsetResult) {
+    let address = utils.getCleanString(req.params.address);
+    coreApi.getScanTxOutset(address).then(function (outsetResult) {
         res.json(outsetResult.total_amount);
     }).catch(function(err) {
         res.json(err);

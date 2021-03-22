@@ -124,6 +124,28 @@ function getRandomString(length, chars) {
 	return result;
 }
 
+function getCleanString(str){
+	try{
+		if(str){
+			return str.replace(/[^a-zA-Z0-9=&]/g, "");
+		}
+		return "";
+	} catch (ex) {
+		return "";
+	}
+}
+
+function getCleanInt(str){
+	try{
+		if(str){
+			return parseInt(str);
+		}
+		return 0;
+	} catch (ex) {
+		return 0;
+	}
+}
+
 var formatCurrencyCache = {};
 
 function getCurrencyFormatInfo(formatType) {
@@ -632,6 +654,8 @@ module.exports = {
 	hex2ascii: hex2ascii,
 	splitArrayIntoChunks: splitArrayIntoChunks,
 	getRandomString: getRandomString,
+	getCleanString: getCleanString,
+	getCleanInt: getCleanInt,
 	getCurrencyFormatInfo: getCurrencyFormatInfo,
 	formatCurrencyAmount: formatCurrencyAmount,
 	formatCurrencyAmountWithForcedDecimalPlaces: formatCurrencyAmountWithForcedDecimalPlaces,
