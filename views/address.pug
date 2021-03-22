@@ -5,15 +5,11 @@ block headContent
 
 block content
 	if (result && result.validateaddress)
-		if (!result.validateaddress.isvalid)
-			h1(class="h3 text-danger") Invalid Address
-				br
-				small(class="monospace") #{address}
-		else
+		if (result.validateaddress.isvalid)
 			h1.h3 Address
 				br
 				small(class="monospace") #{address}
-			
+
 			hr
 
 			if (payoutAddressForMiner)
