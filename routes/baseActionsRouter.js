@@ -542,7 +542,6 @@ router.get("/tx/:transactionId", function (req, res, next) {
 
                 coreApi.getRawTransactions(txids).then(function (txInputs) {
                     res.locals.result.txInputs = txInputs;
-
                     resolve();
                 });
             });
@@ -1199,6 +1198,37 @@ router.get("/api/getaddressbalance/:address", function (req, res, next) {
     let address = utils.getCleanString(req.params.address);
     coreApi.getScanTxOutset(address).then(function (outsetResult) {
         res.json(outsetResult.total_amount);
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
+router.get("/api/getmoneysupply", function (req, res, next) {
+    let moneyDTO = {
+        total_supply: 0,
+        circulating_supply: 0,
+        team_budget: 0,
+        foundation_budget: 0,
+        budget_address: config.budget_address,
+        foundation_address: config.foundation_address
+    };
+
+    coreApi.getBlockchainInfo().then(function (chainInfo) {
+        moneyDTO.total_supply = chainInfo.moneysupply / 100000000;
+
+        coreApi.getScanTxOutset(config.budget_address).then(function (budgetResult) {
+            moneyDTO.team_budget = budgetResult.total_amount;
+
+            coreApi.getScanTxOutset(config.foundation_address).then(function (foundationResult) {
+                moneyDTO.foundation_budget = foundationResult.total_amount;
+                moneyDTO.circulating_supply = moneyDTO.total_supply - (moneyDTO.team_budget + moneyDTO.foundation_budget);
+                res.json(moneyDTO);
+            }).catch(function(err) {
+                res.json(err);
+            });
+        }).catch(function(err) {
+           res.json(moneyDTO);
+        });
     }).catch(function(err) {
         res.json(err);
     });

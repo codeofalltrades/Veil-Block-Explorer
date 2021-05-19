@@ -6,6 +6,8 @@ var coins = require("./coins.js");
 var credentials = require("./credentials.js");
 
 var currentCoin = process.env.VEILEXP_COIN || "VEIL";
+var budget_address = process.env.VEILEXP_BUDGET_ADDRESS || "";
+var foundation_address = process.env.VEILEXP_FOUNDATION_ADDRESS || "";
 
 var rpcCred = credentials.rpc;
 
@@ -47,7 +49,8 @@ for (var i = 0; i < electrumXServerUriStrings.length; i++) {
 
 module.exports = {
 	coin: currentCoin,
-
+	budget_address: budget_address,
+	foundation_address: foundation_address,
 	cookieSecret: cookieSecret,
 
 	privacyMode: (process.env.VEILEXP_PRIVACY_MODE.toLowerCase() == "true"),
